@@ -12,13 +12,16 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ATM {
-	
-	static ArrayList<ArrayList> list = readUserInfoFile();
-	static ArrayList<User> userList = list.get(0);
-	static ArrayList<Admin> adminList = list.get(1);
-	
-	static Scanner in = new Scanner(System.in);
-	
+	private static int balance = 0;
+	private static ArrayList<User> userList = new ArrayList<User>();
+	private static ArrayList<Admin> adminList = new ArrayList<Admin>();
+	static {
+		readUserInfoFile();
+		for (User user : userList) {
+			balance += user.getBalance();
+		}
+	}
+	static Scanner in = new Scanner(System.in);	
 	public static void main(String[] args) {
 		while (true) {
 			System.out.println("请输入卡号");
@@ -37,7 +40,7 @@ public class ATM {
 				if (admin.getCardNumber().equals(cardNumber) &&
 						admin.getPassword().equals(password)) {
 					isSigned = true;
-					adminActivity(userList);
+					adminActivity();
 				}
 			}
 			if (!isSigned) {
@@ -72,10 +75,10 @@ public class ATM {
 				user.searchBalance();
 				break;
 			case 2:
-				user.deposit();
+				ATM.balance += user.deposit();
 				break;
 			case 3:
-				user.withdraw();
+				ATM.balance -= user.withdraw();
 				break;
 			case 4:
 				user.searchRecord();
@@ -91,7 +94,7 @@ public class ATM {
 		}
 	}
 
-	private static void adminActivity(ArrayList<User> userList) {
+	private static void adminActivity() {
 		while (true) {
 			System.out.println("*******************");
 			System.out.println("1.查询所有活期用户信息");
@@ -111,13 +114,13 @@ public class ATM {
 			}
 			switch (selection) {
 			case 1:
-				showInfo(userList);
+				showInfo();
 				break;
 			case 2:
-				userList.add(createAccount(userList));
+				userList.add(createAccount());
 				break;
 			case 3:
-				getATMBalance(userList);
+				getATMBalance();
 				break;
 			case 4:
 				adminList.get(0).setPassword();;
@@ -131,7 +134,7 @@ public class ATM {
 	}
 
 	
-	private static void showInfo(ArrayList<User> userList) {
+	private static void showInfo() {
 		System.out.println("***************************");
 		for (User user : userList) {
 			System.out.println("卡号："+user.getCardNumber());
@@ -141,22 +144,21 @@ public class ATM {
 		}
 	}
 	
-	private static void getATMBalance(ArrayList<User> userList) {
-		int sum = 0;
-		for (User user : userList) {
-			sum += user.getBalance();
-		}
-		System.out.println("ATM资金总额为："+sum);
+	private static void getATMBalance() {
+		System.out.println("ATM资金总额为："+ATM.balance);
 	}
 	
-	private static User createAccount(ArrayList<User> userList) {
-		int cardNumber = Integer.parseInt(userList.get(userList.size()-1).getCardNumber());
+	private static User createAccount() {
+		int cardNumber;
+		if (userList.isEmpty()) 	cardNumber = Integer.parseInt(adminList.get(0).getCardNumber());
+		else cardNumber = Integer.parseInt(userList.get(userList.size()-1).getCardNumber());
 		System.out.println("新账户卡号为："+(cardNumber+1));
 		System.out.println("请输入密码");
 		in.nextLine();
 		String password = in.nextLine();
 		System.out.println("请输入存入金额");
 		int balance = in.nextInt();
+		ATM.balance += balance;
 		Date d = new Date();
 		SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String time = sdf.format(d);
@@ -165,13 +167,7 @@ public class ATM {
 		return user;
 	}
 
-	
-	private static ArrayList<ArrayList> readUserInfoFile() {
-		ArrayList<User> userList = new ArrayList<User>();
-		ArrayList<Admin> adminList = new ArrayList<Admin>();
-		ArrayList<ArrayList> list = new ArrayList<ArrayList>();
-		list.add(userList);
-		list.add(adminList);
+	private static void readUserInfoFile() {
 		try {
 			BufferedReader in = new BufferedReader(
 				    new InputStreamReader(
@@ -185,12 +181,12 @@ public class ATM {
 					int balance = Integer.parseInt(data[2]);
 					String time = data[4];
 					User user = new User(cardNumber, password, balance, time);
-					userList.add(user);
+					ATM.userList.add(user);
 				} else {
 					String cardNumber = data[0];
 					String password = data[1];
 					Admin admin = new Admin(cardNumber, password);
-					adminList.add(admin);
+					ATM.adminList.add(admin);
 				}
 			}
 			in.close();
@@ -199,7 +195,6 @@ public class ATM {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return list;
 	}
 
 	private static void upgradeUserInfo() {
@@ -210,7 +205,7 @@ public class ATM {
 				            new FileOutputStream("UserInfo.txt"))));
 			for (Admin admin : adminList) {
 				out.println(admin.getCardNumber()+"#"+admin.getPassword()+"#0#ADMIN#"
-			+"1970-0-0 0:0:0");
+			+"#ADMIN#1970-0-0 0:0:0");
 			}
 			for (User user : userList) {
 				out.println(user.getCardNumber()+"#"+user.getPassword()+"#"+
@@ -228,10 +223,22 @@ class User {
 	private String cardNumber;
 	private String password;
 	private int balance = 0;
+	private String time;
 	
 	static Scanner in = new Scanner(System.in);
 	
-	private String time;
+	public User(String cardNumber, String password) {
+		this.cardNumber = cardNumber;
+		this.password = password;
+	}
+	
+	public User(String cardNumber, String password, int balance, String time) {
+		this.cardNumber = cardNumber;
+		this.password = password;
+		this.balance = balance;
+		this.time = time;
+	}
+	
 	public String getTime() {
 		return time;
 	}
@@ -256,10 +263,6 @@ class User {
 		}
 	}
 
-	public void setTime(String time) {
-		this.time = time;
-	}
-
 	public int getBalance() {
 		return balance;
 	}
@@ -271,22 +274,16 @@ class User {
 	public String getCardNumber() {
 		return cardNumber;
 	}
+	
 	public void setCardNumber(String cardNumber) {
 		this.cardNumber = cardNumber;
-	}
-
-	public User(String cardNumber, String password, int balance, String time) {
-		this.cardNumber = cardNumber;
-		this.password = password;
-		this.balance = balance;
-		this.time = time;
 	}
 	
 	public void searchBalance() {
 		System.out.println("当前余额："+balance+"元");
 	}
 	
-	public void deposit() {
+	public int deposit() {
 		System.out.println("请输入存款金额");
 		while (true) {
 			int money = in.nextInt();
@@ -295,21 +292,23 @@ class User {
 			} else {
 				balance += money;
 				saveRecord(money);
-				break;
+				in.nextLine();
+				return money;
 			}		
 		}
 	}
 	
-	public void withdraw() {
+	public int withdraw() {
 		System.out.println("请输入取款金额");
 		while (true) {
 			int money = in.nextInt();
-			if (money % 100 != 0 || money > balance || money <= 0) {
+			if (money % 100 != 0 || money > balance || money <= 0 || money > 2000) {
 				System.out.println("请重新输入取款金额");
 			} else {
 				balance -= money;
 				saveRecord(-money);
-				break;
+				in.nextLine();
+				return money;
 			}	
 		}
 	}
@@ -339,7 +338,6 @@ class User {
 				"555555","666666","777777","888888","999999"};
 		while (true) {
 			System.out.println("请输入新密码");
-			in.nextLine();
 			String newKey_1 = in.nextLine();
 			System.out.println("请再次输入新密码");
 			String newKey_2 = in.nextLine();
@@ -347,6 +345,7 @@ class User {
 			for (String k : invalidKey) {
 				if (k.equals(newKey_1)) {
 					valid = false;
+					break;
 				}
 			}
 			if (newKey_1.equals(newKey_2) && valid) {
@@ -360,50 +359,9 @@ class User {
 	}
 }
 
-class Admin {
-	
-	private String cardNumber;
-	private String password;
-
-	static Scanner in = new Scanner(System.in);
-	
-	public String getCardNumber() {
-		return cardNumber;
-	}
-	public void setCardNumber(String cardNumber) {
-		this.cardNumber = cardNumber;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword() {
-		String[] invalidKey = {"000000","111111","222222","333333","444444",
-				"555555","666666","777777","888888","999999"};
-		while (true) {
-			System.out.println("请输入新密码");
-			String newKey_1 = in.nextLine();
-			System.out.println("请再次输入新密码");
-			String newKey_2 = in.nextLine();
-			boolean valid = true;
-			for (String k : invalidKey) {
-				if (k.equals(newKey_1)) {
-					valid = false;
-				}
-			}
-			if (newKey_1.equals(newKey_2) && valid) {
-				System.out.println("设置成功");
-				this.password = newKey_1;
-				break;
-			}else {
-				System.out.println("密码无效，请重新设置");
-			}
-		}
-	}
-	
+class Admin extends User {	
 	public Admin(String cardNumber, String password) {
-		this.cardNumber = cardNumber;
-		this.password = password;
+		super(cardNumber, password);
 	}
 	
 }
