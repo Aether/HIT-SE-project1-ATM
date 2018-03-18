@@ -15,6 +15,7 @@ public class ATM {
     private static int balance = 0;
     private static ArrayList<User> userList = new ArrayList<User>();
     private static ArrayList<Admin> adminList = new ArrayList<Admin>();
+    /*加载用户和管理员信息，初始化ATM余额*/
     static {
         readUserInfoFile();
         for (User user : userList) {
@@ -40,14 +41,14 @@ public class ATM {
                 if (admin.getCardNumber().equals(cardNumber) &&
                     admin.getPassword().equals(password)) {
                     isSigned = true;
-                    adminActivity();
+                    adminActivity(admin);
                 }
             }
             if (!isSigned) {
                 System.out.println("账号或用户名有误，请重新输入");
             }else {
                 in.nextLine();
-                upgradeUserInfo();
+                updateUserInfo();
             }
         }
     }
@@ -94,7 +95,8 @@ public class ATM {
         }
     }
     
-    private static void adminActivity() {
+    private static void adminActivity(Admin admin) {
+        System.out.println("欢迎您，管理员");
         while (true) {
             System.out.println("*******************");
             System.out.println("1.查询所有活期用户信息");
@@ -123,7 +125,7 @@ public class ATM {
                     getATMBalance();
                     break;
                 case 4:
-                    adminList.get(0).setPassword();;
+                    admin.setPassword();;
                     break;
                 case 0:
                     return;
@@ -132,7 +134,6 @@ public class ATM {
             in.nextLine();in.nextLine();
         }
     }
-    
     
     private static void showInfo() {
         System.out.println("***************************");
@@ -174,6 +175,7 @@ public class ATM {
                                                                          new FileInputStream("UserInfo.txt")));
             String line;
             while ((line = in.readLine()) != null) {
+                /*按行读取文件，根据#符号将文本分割为字符串数组*/
                 String[] data = line.split("#");
                 if (data[3].equals("HQ")) {
                     String cardNumber = data[0];
@@ -197,7 +199,7 @@ public class ATM {
         }
     }
     
-    private static void upgradeUserInfo() {
+    private static void updateUserInfo() {
         try {
             PrintWriter out = new PrintWriter(
                                               new BufferedWriter(
@@ -314,6 +316,7 @@ class User {
     }
     
     public void saveRecord(int money) {
+        /*格式化当前时间*/
         Date d = new Date();
         SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = sdf.format(d);
@@ -365,4 +368,3 @@ class Admin extends User {
     }
     
 }
-
