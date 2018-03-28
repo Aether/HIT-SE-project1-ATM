@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">  
+  <display-name>UploadImageServlet</display-name>  
+  <welcome-file-list>  
+    <welcome-file>index.html</welcome-file>  
+    <welcome-file>index.htm</welcome-file>  
+    <welcome-file>index.jsp</welcome-file>  
+    <welcome-file>default.html</welcome-file>  
+    <welcome-file>default.htm</welcome-file>  
+    <welcome-file>default.jsp</welcome-file>  
+  </welcome-file-list>  
+  <servlet>  
+    <servlet-name>TestServlet</servlet-name>  
+    <servlet-class>TestServlet</servlet-class>  
+  </servlet>  
+  <servlet-mapping>  
+    <servlet-name>TestServlet</servlet-name>  
+    <url-pattern>/TestServlet</url-pattern>  
+  </servlet-mapping>  
+  <servlet>
+        <servlet-name>MySQL</servlet-name>
+        <servlet-class>MySQL</servlet-class>
+    </servlet>  
+  <servlet-mapping>
+        <servlet-name>MySQL</servlet-name>
+        <url-pattern>MySQL</url-pattern>
+    </servlet-mapping>
+</web-app> 

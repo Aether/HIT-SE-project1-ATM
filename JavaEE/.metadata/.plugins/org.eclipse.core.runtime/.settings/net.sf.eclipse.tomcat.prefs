@@ -1,0 +1,6 @@
+computeSourcePath=true
+contextsDir=/Users/ucla/tomcat/conf/Catalina/localhost
+eclipse.preferences.version=1
+tomcatConfigFile=/Users/ucla/tomcat/conf/server.xml
+tomcatDir=/Users/ucla/tomcat
+tomcatVersion=tomcatV9
