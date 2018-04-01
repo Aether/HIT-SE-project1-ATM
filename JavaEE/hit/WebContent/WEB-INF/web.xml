@@ -17,7 +17,7 @@
 
     <servlet-mapping>
         <servlet-name>MyServlet</servlet-name>
-        <url-pattern>/MyServlet</url-pattern>
+        <url-pattern>/com.hit.MyServlet</url-pattern>
     </servlet-mapping>
     
       
@@ -27,7 +27,7 @@
 	 </servlet>
 	 <servlet-mapping>
 	     <servlet-name>MySQLAccess</servlet-name>
-	     <url-pattern>/MySQLAccesss</url-pattern>
+	     <url-pattern>/com.hit.MySQLAccesss</url-pattern>
 	 </servlet-mapping>
 
 </web-app>

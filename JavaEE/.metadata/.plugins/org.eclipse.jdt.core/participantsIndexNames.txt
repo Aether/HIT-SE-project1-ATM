@@ -1,3 +1,5 @@
 INDEX VERSION 1.130
 /Users/ucla/Desktop/JavaEE/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/2092062336.index
 /hit/src
+/Users/ucla/Desktop/JavaEE/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/195398951.index
+/guestbook/src

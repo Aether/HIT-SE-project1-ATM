@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>鏂板瀛︾敓淇℃伅</title>
+<meta charset="gb2312">
+<title>新增学生信息</title>
 </head>
 <body>
-<form id="form_addstuinfo" name="form_addstuinfo" method="post" action="action.jsp">
-<input type="hidden" name="input" value="addstuinfo"/>
-瀛﹀彿: 
-<input type="tel" name="id" id="addid">
-<br> 濮撳悕:
-<input type="text" name="name" id="addname">
-<br> 鎬у埆:
-<input type="text" name="sex" id="addsex">
-<br> 骞撮緞:
-<input type="tel" name="age" id="addage">
-<br> 涓撲笟:
-<input type="text" name="manjor" id="addmajor">
+<form id="form_addstuinfo" name="form_addstuinfo" method="post" action="MyServlet">
+<input type="hidden" name="input" value="add"/>
+学号: 
+<input type="text" name="id">
+<br> 姓名:
+<input type="text" name="name">
+<br> 性别:
+<input type="text" name="sex">
+<br> 年龄:
+<input type="text" name="age">
+<br> 专业:
+<input type="text" name="major">
 <br><br>
-<input type="submit" value="鎻愪氦">
+<input type="submit" value="提交">
 </form>
 </body>
 </html>
